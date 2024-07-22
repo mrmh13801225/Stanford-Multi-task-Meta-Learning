@@ -5,6 +5,7 @@ from evaluation import mrr_score, mse_score
 from models import MultiTaskNet
 from multitask import MultitaskModel
 from torch.utils.tensorboard import SummaryWriter
+from tqdm import tqdm
 
 
 def main(config):
@@ -13,6 +14,7 @@ def main(config):
 
     dataset = get_movielens_dataset(variant='100K')
     train, test = dataset.random_train_test_split(test_fraction=config.test_fraction)
+    print("\ninja\n")
 
     net = MultiTaskNet(train.num_users,
                        train.num_items,
@@ -22,7 +24,7 @@ def main(config):
                            factorization_weight=config.factorization_weight,
                            regression_weight=config.regression_weight)
 
-    for epoch in range(config.epochs):
+    for epoch in tqdm(range(config.epochs), desc="Training Progress"):
         factorization_loss, score_loss, joint_loss = model.fit(train)
         mrr = mrr_score(model, test, train)
         mse = mse_score(model, test)
