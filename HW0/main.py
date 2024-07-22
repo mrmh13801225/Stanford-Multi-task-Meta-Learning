@@ -38,8 +38,8 @@ if __name__=='__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--test_fraction', type=float, default=0.05)
     parser.add_argument('--epochs', type=int, default=200)
-    parser.add_argument('--factorization_weight', type=float, default=0.995)
-    parser.add_argument('--regression_weight', type=float, default=0.005)
+    parser.add_argument('--factorization_weight', type=float, default=0.5)
+    parser.add_argument('--regression_weight', type=float, default=0.5)
     parser.add_argument('--shared_embeddings', default=True,
                         action='store_true')
     parser.add_argument('--no_shared_embeddings', dest='shared_embeddings',

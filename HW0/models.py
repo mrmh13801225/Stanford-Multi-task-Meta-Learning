@@ -73,7 +73,23 @@ class MultiTaskNet(nn.Module):
 
         super().__init__()
 
-        self.embedding_dim = embedding_dim
+        self.embedding_dim = embedding_dim        
+        self.embedding_sharing = embedding_sharing
+
+        self.user_embeddings = ScaledEmbedding(num_users, embedding_dim, sparse=sparse)
+        self.item_embeddings = ScaledEmbedding(num_items, embedding_dim, sparse=sparse)
+        self.user_biases = ZeroEmbedding(num_users, 1, sparse=sparse)
+        self.item_biases = ZeroEmbedding(num_items, 1, sparse=sparse)
+
+        layers = []
+        input_size = 3 * embedding_dim 
+        for size in layer_sizes:
+            layers.append(nn.Linear(input_size, size))
+            layers.append(nn.ReLU())
+            layers.append(nn.Dropout(0.5))
+            input_size = size
+        layers.append(nn.Linear(input_size, 1))  
+        self.mlp = nn.Sequential(*layers)
 
         #********************************************************
         #******************* YOUR CODE HERE *********************
@@ -104,6 +120,20 @@ class MultiTaskNet(nn.Module):
         score: tensor
             Tensor of user-item score predictions of shape (batch,)
         """
+        
+        user_embeds = self.user_embeddings(user_ids)
+        item_embeds = self.item_embeddings(item_ids)
+        user_bias = self.user_biases(user_ids).squeeze()
+        item_bias = self.item_biases(item_ids).squeeze()
+
+        # Compute dot product for interaction prediction
+        interaction = (user_embeds * item_embeds).sum(dim=1)
+        predictions = interaction + user_bias + item_bias
+
+        # Concatenate embeddings and element-wise product for MLP input
+        mlp_input = torch.cat([user_embeds, item_embeds, user_embeds * item_embeds], dim=1)
+        score = self.mlp(mlp_input).squeeze()
+        
         #********************************************************
         #******************* YOUR CODE HERE *********************
         #********************************************************
