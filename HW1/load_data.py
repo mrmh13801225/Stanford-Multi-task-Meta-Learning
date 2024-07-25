@@ -134,8 +134,34 @@ class DataGenerator(IterableDataset):
 
         #############################
         #### YOUR CODE GOES HERE ####
-        pass
         #############################
+        
+        image_batch = []
+        label_batch = []
+
+        sampled_classes = random.sample(self.folders, self.num_classes)
+
+        for class_idx, class_folder in enumerate(sampled_classes):
+            sampled_images = random.sample(os.listdir(class_folder), self.num_samples_per_class)
+
+            for sample_idx, image_filename in enumerate(sampled_images):
+                image_path = os.path.join(class_folder, image_filename)
+                image_array = self.image_file_to_array(image_path, self.dim_input)
+
+                label = np.zeros(self.num_classes)
+                label[class_idx] = 1.0
+
+                image_batch.append(image_array)
+                label_batch.append(label)
+
+        combined_data = list(zip(image_batch, label_batch))
+        random.shuffle(combined_data)
+        image_batch, label_batch = zip(*combined_data)
+
+        image_batch = np.array(image_batch)
+        label_batch = np.array(label_batch)
+
+        return image_batch, label_batch
 
     def __iter__(self):
         while True:
