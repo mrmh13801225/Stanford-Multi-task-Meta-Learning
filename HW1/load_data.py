@@ -136,32 +136,24 @@ class DataGenerator(IterableDataset):
         #### YOUR CODE GOES HERE ####
         #############################
         
-        image_batch = []
-        label_batch = []
-
+        sample = np.empty((self.num_samples_per_class, self.num_classes, 784))
+        labels = np.empty((self.num_samples_per_class, self.num_classes, self.num_classes))
         sampled_classes = random.sample(self.folders, self.num_classes)
-
+        test_ordes = random.sample(range(self.num_classes), self.num_classes)
         for class_idx, class_folder in enumerate(sampled_classes):
-            sampled_images = random.sample(os.listdir(class_folder), self.num_samples_per_class)
-
-            for sample_idx, image_filename in enumerate(sampled_images):
+            class_samples = random.sample(os.listdir(class_folder), self.num_samples_per_class)
+            for sample_idx, image_filename in enumerate(class_samples):
                 image_path = os.path.join(class_folder, image_filename)
                 image_array = self.image_file_to_array(image_path, self.dim_input)
-
                 label = np.zeros(self.num_classes)
                 label[class_idx] = 1.0
+                index = class_idx
+                if (sample_idx == self.num_samples_per_class-1):
+                    index = test_ordes[class_idx]    
+                labels[sample_idx][index] = label
+                sample[sample_idx][index] = image_array
 
-                image_batch.append(image_array)
-                label_batch.append(label)
-
-        combined_data = list(zip(image_batch, label_batch))
-        random.shuffle(combined_data)
-        image_batch, label_batch = zip(*combined_data)
-
-        image_batch = np.array(image_batch)
-        label_batch = np.array(label_batch)
-
-        return image_batch, label_batch
+        return sample, labels
 
     def __iter__(self):
         while True:
