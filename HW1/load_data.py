@@ -152,8 +152,11 @@ class DataGenerator(IterableDataset):
                     index = test_ordes[class_idx]    
                 labels[sample_idx][index] = label
                 sample[sample_idx][index] = image_array
+                
+        samples_tensor = torch.tensor(sample, dtype=torch.float32).to(self.device)
+        labels_tensor = torch.tensor(labels, dtype=torch.float32).to(self.device)
 
-        return sample, labels
+        return samples_tensor, labels_tensor
 
     def __iter__(self):
         while True:
