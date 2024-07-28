@@ -156,6 +156,8 @@ class DataGenerator(IterableDataset):
         samples_tensor = torch.tensor(sample, dtype=torch.float32).to(self.device)
         labels_tensor = torch.tensor(labels, dtype=torch.float32).to(self.device)
 
+        print (f'dataLoader passing : {labels_tensor}')
+        
         return samples_tensor, labels_tensor
 
     def __iter__(self):
