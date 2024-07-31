@@ -121,6 +121,9 @@ class OmniglotDataset(dataset.Dataset):
         labels_query = torch.tensor(labels_query)
 
         return images_support, labels_support, images_query, labels_query
+    
+    def __len__(self):
+        return len(self._character_folders)
 
 
 class OmniglotSampler(sampler.Sampler):
