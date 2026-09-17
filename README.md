@@ -4,11 +4,17 @@ This repository contains solutions and experiments for multiple Stanford CS330 h
 
 ## Repository Layout
 
-The top-level homework folders have been renamed for clarity:
+Canonical homework folders:
 
-- `homework_0/` — MovieLens multitask recommendation homework (`main.py`, supporting modules, and report notebook/PDF).
-- `homework_1/` — Memory-augmented neural network (MANN) homework on Omniglot (`hw1.py`, notebook, and handout).
-- `homework_2/` — Meta-learning homework with MAML and ProtoNet implementations (`maml.py`, `protonet.py`, notebooks, and handout).
+- `HW0/` — MovieLens multitask recommendation homework (`main.py`, supporting modules, and report notebook/PDF).
+- `HW1/` — Memory-augmented neural network (MANN) homework on Omniglot (`hw1.py`, notebook, and handout).
+- `HW2/` — Meta-learning homework with MAML and ProtoNet implementations (`maml.py`, `protonet.py`, notebooks, and handout).
+
+Comprehensive directory aliases are provided for readability:
+
+- `homework_0/` → `HW0/`
+- `homework_1/` → `HW1/`
+- `homework_2/` → `HW2/`
 
 ## Setup
 
